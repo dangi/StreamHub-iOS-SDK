@@ -62,10 +62,11 @@ NSDictionary* createRequestSerializerMap() {
         _lfNetwork = network;
         _requestSerializers = createRequestSerializerMap();
         _responseSerializer = [LFSJSONResponseSerializer serializer];
-        
-        NSString *hostname = [NSString stringWithFormat:@"%@.%@",
-                              [self subdomain],
-                              ((environment && [network isEqualToString:@"livefyre.com"]) ? environment : network)];
+ 
+        NSString *shortNetworkName = [[network componentsSeparatedByString:@"."] firstObject];
+        NSString *networkDomain = [network stringByReplacingOccurrencesOfString:[shortNetworkName stringByAppendingString:@"."] withString:@""];
+        NSString *hostname = [NSString stringWithFormat:@"%@.%@.%@", shortNetworkName, [self subdomain], networkDomain];
+
         NSURL *baseURL = [[NSURL alloc] initWithScheme:LFSScheme
                                                   host:hostname
                                                   path:@"/"];
